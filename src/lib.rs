@@ -406,10 +406,13 @@ where
                 files.directory_is_syncing = true;
                 drop(files);
                 let synced_at = Instant::now();
-                self.data
-                    .config
-                    .file_manager
-                    .sync_all(&self.data.config.directory)?;
+                #[cfg(not(windows))]
+                {
+                    self.data
+                        .config
+                        .file_manager
+                        .sync_all(&self.data.config.directory)?;
+                }
 
                 files = self.data.files.lock();
                 files.directory_is_syncing = false;
